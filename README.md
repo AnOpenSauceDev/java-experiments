@@ -14,6 +14,6 @@ and it's a good idea to have plenty of disk space for all the raw, uncompressed 
 
 TODO's:
 
-- [] optimize, possibly multithreaded.
-- [] make everything have a config of some sort.
-- [] make outputs look "cleaner", especially with sobel.
+- [ ] optimize, possibly multithreaded.
+- [ ] make everything have a config of some sort.
+- [ ] make outputs look "cleaner", especially with sobel.
