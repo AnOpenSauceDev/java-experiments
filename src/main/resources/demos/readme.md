@@ -2,6 +2,8 @@
 
 (the video preview here had to be compressed to fit GitHub's limits (10 MB), and a raw file is available in the post-detect section)
 
+## A detailed comparison is [available here!](https://github.com/AnOpenSauceDev/java-experiments/blob/master/src/main/resources/demos/comparison.md)
+
 
 https://github.com/AnOpenSauceDev/java-experiments/assets/119765865/fac13c0d-9a5e-41af-bde0-8fa22c65a130
 
