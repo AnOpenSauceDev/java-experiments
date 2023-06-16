@@ -18,4 +18,4 @@ https://github.com/AnOpenSauceDev/java-experiments/assets/119765865/fac13c0d-9a5
 (i have rendered a few more demos, such as Virtual Insanity, unfortunately i cannot share them here due to copyright and all that legal stuff.)
 Vector Games, such as Vib-Ribbon don't look all that good with Canny and Sobel.
 Thin lines, such as drawings and anime, tend to look much better using Canny, while Sobel looks better with real-life things.
-Pixel art using canny is... salvageable, but transpearancy leaves ghosting artifacts
+Pixel art using canny is... salvageable, but transpearancy leaves ghosting artifacts on edges most of the time.
