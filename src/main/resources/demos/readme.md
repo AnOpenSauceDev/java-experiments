@@ -1,6 +1,6 @@
 # Demos of the thing!
 
-(the video preview here had to be compressed to fit GitHub's limits (10 MB), and a raw file is available in the post-detect section)
+(the video preview here had to be compressed to fit GitHub's limits (10 MB), and [a raw file is available in the post-detect section](https://github.com/AnOpenSauceDev/java-experiments/blob/master/src/main/resources/demos/touhou/post-detect/bad-apple.mp4))
 
 ## A detailed comparison is [available here!](https://github.com/AnOpenSauceDev/java-experiments/blob/master/src/main/resources/demos/comparison.md)
 
