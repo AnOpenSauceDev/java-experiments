@@ -3,6 +3,7 @@ package an.opensauce;
 import org.bytedeco.ffmpeg.avcodec.AVCodec;
 import org.bytedeco.javacv.*;
 import org.bytedeco.opencv.opencv_core.IplImage;
+import org.bytedeco.tesseract.OSResults;
 import org.opencv.core.*;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -23,7 +24,7 @@ public class EdgeDetect {
         System.out.println("path: " + System.getProperty("user.dir"));
 
         if(path == null || path == "test"){
-            image = Imgcodecs.imread("edgedetect-test.jpg");
+            image = Imgcodecs.imread("/resources/demos/touhou/edgedetect-test.jpg");
         }else {
             image = Imgcodecs.imread(path);
         }
@@ -38,23 +39,32 @@ public class EdgeDetect {
         Imgproc.Sobel(blur,y, CvType.CV_64F, 0, 1, 5);
         Imgproc.Sobel(blur,xy, CvType.CV_64F, 1, 1, 5);
 
-
-        Imgcodecs.imwrite("C:\\Users\\User\\test\\output.png",xy);
+        if(System.getProperty("os.name").contains("Win")) {
+            Imgcodecs.imwrite("test\\_image_output.png", xy);
+        }else { // assume Linux/Macos/BSD filesystem
+            Imgcodecs.imwrite("./test/_image_output.png", xy);
+        }
 
         Mat canny_output = new Mat();
         Imgproc.Canny(blur,canny_output,100,200,3,false);
-        Imgcodecs.imwrite("C:\\Users\\User\\test\\output-canny.png",canny_output);
+        if(System.getProperty("os.name").contains("Win")) {
+            Imgcodecs.imwrite("test\\_image_output-canny.png",canny_output);
+        }else { // assume Linux/Macos/BSD filesystem
+            Imgcodecs.imwrite("./test/_image_output-canny.png",canny_output);
+        }
+
         System.out.println("Done!");
 
     }
 
-    String videoFilePath = "test.webm";
-    String outputFolderPath = "C:\\Users\\User\\test";
+
 
 
 
     void video_process(String path, boolean Canny){
-        System.out.println("WARNING, PROFILING IS ON, EXECUTION WILL BE MUCH, MUCH SLOWER, REMOVE ONCE OPTIMIZED.");
+        boolean Is_Linux = !System.getProperty("os.name").contains("win");
+        System.out.println("Starting process");
+        long start = System.nanoTime();
         FFmpegFrameGrabber capture =  new FFmpegFrameGrabber(path);
         Java2DFrameConverter converter = new Java2DFrameConverter();
         try {
@@ -62,14 +72,13 @@ public class EdgeDetect {
 
             capture.start();
             int frameDuration = capture.getLengthInFrames();
-            for(int i = 0; i < frameDuration; i++){
-                long start = System.nanoTime();
+            for(int i = 0; i <= frameDuration; i++){
+
 
                 Frame frame = capture.grabImage();
                 long convTime = System.nanoTime();
                 Mat mat = BufferedImage2Mat(converter.convert(frame));
-                long finalconvtime = System.nanoTime() - convTime;
-                long processing = System.nanoTime();
+
                 Mat grayscale = new Mat();
                 Imgproc.cvtColor(mat,grayscale,Imgproc.COLOR_BGR2GRAY); // uses the B(lue)G(reen)R(ed) color format, caused by imread();
                 Mat blur = new Mat();
@@ -77,30 +86,34 @@ public class EdgeDetect {
 
                 if(!Canny) { // sobel, slower
                     Mat x = new Mat(), y = new Mat(), xy = new Mat();
-                    Imgproc.Sobel(blur, x, CvType.CV_64F, 1, 0, 5);
-                    Imgproc.Sobel(blur, y, CvType.CV_64F, 0, 1, 5);
                     Imgproc.Sobel(blur, xy, CvType.CV_64F, 1, 1, 5);
-                    Imgcodecs.imwrite("test\\file_"+ i + ".png",xy);
+                    if(!Is_Linux) {
+                        Imgcodecs.imwrite("test\\file_" + i + ".png", xy);
+                    }else {
+                        Imgcodecs.imwrite("./test/file_" + i + ".png", xy);
+                    }
                 }
 
 
                 if(Canny) { // canny edge-detection, about 2x as fast vs the full sobel algorithm, also sometimes good-looking
                     Mat canny_output = new Mat();
                     Imgproc.Canny(blur, canny_output, 100, 200, 3, false);
-                    Imgcodecs.imwrite("test\\file_"+ i + ".png",canny_output);
+                    if(!Is_Linux) {
+                        Imgcodecs.imwrite("test\\file_" + i + ".png", canny_output);
+                    }else {
+                        Imgcodecs.imwrite("./test/file_" + i + ".png", canny_output);
+                    }
                 }
-                long finalproctime = System.nanoTime() - convTime;
 
-                long finaltime = System.nanoTime() - start;
 
-                //System.out.println("One frame took: " + finaltime + " nanoseconds to fully process (AKA: " + finaltime / 1000000 + "ms)" );
-
-                //System.out.println("One frame took: " + finalconvtime + " nanoseconds to convert (AKA: " + finalconvtime / 1000000 + "ms)" );
-                //System.out.println("One frame took: " + finalproctime + " nanoseconds to render (AKA: " + finalproctime / 1000000 + "ms)" );
 
             }
             capture.close();
             capture.release();
+            long finaltime = System.nanoTime() - start;
+
+            System.out.println("that took: " + finaltime + " nanoseconds to fully process (AKA: " + finaltime / 1000000 + "ms)" );
+
         }catch (Exception e){
             e.printStackTrace();
 
